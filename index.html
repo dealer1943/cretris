@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cretris — Credits in play</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <div class="community-banner">Thanks to <a href="https://mooch.agency/creditcards" target="_blank" rel="noopener">mooch.agency/creditcards</a> for adding us to the Credit Card community</div>
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><p class="eyebrow">Credits / Arcade 001</p><h1>CRETRIS<span>®</span></h1></div></div>
+      <p class="tagline">A falling-block game made from on-chain color.</p>
+    </header>
+
+    <section class="game-layout" aria-label="Cretris game">
+      <aside class="sidebar left-panel">
+        <div class="panel-label">01 / Session</div>
+        <div class="level-card"><span>LEVEL</span><strong id="level">01</strong><small id="speed">900 ms / fall</small></div>
+        <div class="stat"><span>Score</span><strong id="score">000000</strong></div>
+        <div class="stat"><span>Lines</span><strong id="lines">00</strong></div>
+        <div class="stat"><span>Pieces</span><strong id="pieces">00</strong></div>
+        <p class="level-note">Clear 4 lines to reach the next level.</p>
+        <div class="progress-heading"><span>Next level</span><span id="progress-count">0 / 4 lines</span></div>
+        <div class="progress"><div id="progress-fill"></div></div>
+        <div class="source-heading">IN THIS LEVEL <span>↘</span></div>
+        <div id="sources" class="sources"><p class="muted">Loading Credit rows…</p></div>
+      </aside>
+
+      <div class="board-column">
+        <div class="board-top"><span>THE WELL</span><span id="board-status">READY TO PLAY</span></div>
+        <div class="board-wrap">
+          <canvas id="board" width="320" height="640" role="img" aria-label="Tetris playfield"></canvas>
+          <div class="board-overlay" id="overlay"><div class="overlay-inner"><span class="overlay-kicker" id="overlay-kicker">CREDIT-POWERED TETRIS</span><h2 id="overlay-title">are you ready?</h2><p id="overlay-copy">Every level adds a row of credit to clear</p><div id="game-summary" class="game-summary" hidden></div><button id="start" type="button" disabled>Loading Credits…</button></div></div>
+        </div>
+        <div class="mobile-controls" aria-label="Touch controls"><button data-action="left" aria-label="Move left">←</button><button data-action="rotate" aria-label="Rotate">↻</button><button data-action="right" aria-label="Move right">→</button><button data-action="drop" aria-label="Place piece">DROP ↓</button></div>
+        <p class="controls-hint"><kbd>←</kbd><kbd>→</kbd> move <kbd>↑</kbd> rotate <kbd>↓</kbd> or <kbd>SPACE</kbd> place <kbd>P</kbd> pause</p>
+      </div>
+
+      <aside class="sidebar right-panel">
+        <div class="panel-label">02 / On deck</div>
+        <div class="next-card"><span>NEXT BLOCK</span><canvas id="next" width="128" height="128" role="img" aria-label="Next piece"></canvas><small>One piece preview</small></div>
+        <p class="piece-key"><span style="--piece:#00b8df">C / J</span><span style="--piece:#eb008b">M / L</span><span style="--piece:#f2e839">Y / O</span><span style="--piece:#080808">K / T</span><span style="--piece:#f6f6f2">W / I</span></p>
+        <div class="log-header"><span>GAME LOG</span><span class="live-dot">LIVE</span></div>
+        <ol id="game-log" class="game-log" aria-live="polite"><li class="muted">Your session starts here.</li></ol>
+      </aside>
+    </section>
+    <footer><span>CRETRIS® / 2026</span><span>Artwork from <a href="https://jack.art/credits" target="_blank" rel="noopener">Jack Butcher’s Credits ↗</a></span><span>Built to keep playing.</span></footer>
+  </main>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

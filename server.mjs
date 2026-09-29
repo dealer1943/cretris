@@ -10,7 +10,7 @@ const port = Number(process.env.PORT || 5174);
 
 http.createServer(async (req,res) => {
   try {
-    if (req.url === '/credits-rpc' && req.method === 'POST') {
+    if (req.url === '/api/credits-rpc' && req.method === 'POST') {
       let body = '';
       for await (const chunk of req) {
         body += chunk;

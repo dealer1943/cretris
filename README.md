@@ -12,6 +12,10 @@ npm run dev
 
 Open `http://127.0.0.1:5174`. The local server relays read-only artwork requests to Ethereum PublicNode. An internet connection is required to load real Credit artwork. `npm test` runs the board logic checks.
 
+## Deploy on Vercel
+
+Import `dealer1943/cretris` with the repository root as the project root. `vercel.json` selects the **Other** framework, runs `npm run build`, and serves the `dist` directory. The Credit RPC relay is a Vercel Function at `/api/credits-rpc`. No environment variables are required. The custom `server.mjs` is for local development only.
+
 ## Controls
 
 - Left / Right: move

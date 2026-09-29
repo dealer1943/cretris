@@ -18,7 +18,7 @@ async function readCredit(id) {
   const timeout = setTimeout(() => controller.abort(), 25000);
   let response;
   try {
-    response = await fetch('/credits-rpc', {
+    response = await fetch('/api/credits-rpc', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       signal:controller.signal,

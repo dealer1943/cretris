@@ -25,3 +25,5 @@ Import `dealer1943/cretris` with the repository root as the project root. `verce
 - P: pause
 
 Touch controls appear on narrow screens. Filled rows clear and the stack above falls, as in Tetris. After the stack tops out, the game-over panel shows the final level, average active time to clear a line, the share of placed pieces that cleared at least one line, and average active time from piece spawn to placement. Paused time and Credit loading time do not count toward these averages.
+
+Use **Copy board** on the game-over panel to copy a PNG of the finished playfield and results for sharing. If image clipboard access is unavailable, the button downloads the PNG instead.

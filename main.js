@@ -22,18 +22,21 @@ function stopPlayClock() {
 }
 function seconds(ms) { return `${(ms / 1000).toFixed(1)}s`; }
 
-function showGameSummary() {
-  const summary = $('game-summary');
-  const rows = [
+function gameSummaryRows() {
+  return [
     ['Final level', String(level).padStart(2,'0')],
     ['Avg time to clear a line', lineCount ? seconds(clearTimeMs / lineCount) : '—'],
     ['Odds to clear a line per piece', piecesPlaced ? `${Math.round(clearingPieces / piecesPlaced * 100)}% (${clearingPieces}/${piecesPlaced})` : '—'],
     ['Avg time to drop', piecesPlaced ? seconds(totalDropMs / piecesPlaced) : '—']
   ];
+}
+
+function showGameSummary() {
+  const summary = $('game-summary');
   const table = document.createElement('table');
   table.setAttribute('aria-label','Game statistics');
   const body = document.createElement('tbody');
-  for (const [label,value] of rows) {
+  for (const [label,value] of gameSummaryRows()) {
     const tr = document.createElement('tr');
     const th = document.createElement('th');
     th.scope = 'row'; th.textContent = label;
@@ -42,6 +45,66 @@ function showGameSummary() {
     tr.append(th,td); body.append(tr);
   }
   table.append(body); summary.replaceChildren(table); summary.hidden = false;
+}
+
+function shareBoardImage() {
+  const image = document.createElement('canvas');
+  image.width = 640;
+  image.height = 1280;
+  const share = image.getContext('2d');
+  share.imageSmoothingEnabled = false;
+  share.drawImage(boardCanvas,0,0,image.width,image.height);
+  share.fillStyle = 'rgba(16,18,13,.76)';
+  share.fillRect(0,0,image.width,image.height);
+  share.fillStyle = 'rgba(19,22,18,.89)';
+  share.fillRect(40,300,560,678);
+  share.textAlign = 'center';
+  share.textBaseline = 'middle';
+  share.fillStyle = '#e9e94b';
+  share.font = '500 19px "DM Mono", monospace';
+  share.fillText('GAME OVER',320,350);
+  share.fillStyle = '#f0f0eb';
+  share.font = '700 56px "Space Grotesk", Arial, sans-serif';
+  share.fillText('You have exceeded',320,430);
+  share.fillText('your credit limit.',320,493);
+  share.fillStyle = '#b5b8ad';
+  share.font = '26px "Space Grotesk", Arial, sans-serif';
+  share.fillText(`${lineCount} lines cleared · ${score} points`,320,566);
+  share.font = '18px "DM Mono", monospace';
+  const shareLabels = ['Final level','Avg time / line','Line-clear chance / piece','Avg time / drop'];
+  gameSummaryRows().forEach(([,value],index) => {
+    const y = 645 + index*72;
+    share.strokeStyle = '#51584b';
+    share.beginPath(); share.moveTo(78,y-30); share.lineTo(562,y-30); share.stroke();
+    share.textAlign = 'left'; share.fillStyle = '#b5b8ad';
+    share.fillText(shareLabels[index],78,y);
+    share.textAlign = 'right'; share.fillStyle = '#e9e94b';
+    share.fillText(value,562,y);
+  });
+  share.textAlign = 'center';
+  share.fillStyle = '#e9e94b';
+  share.font = '500 18px "DM Mono", monospace';
+  share.fillText('CRETRIS®',320,1140);
+  return image;
+}
+
+async function copyBoard() {
+  if (mode !== 'over') return;
+  const button = $('copy-board');
+  const image = shareBoardImage();
+  try {
+    if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error('Image clipboard unavailable');
+    const png = new Promise((resolve,reject) => image.toBlob(blob => blob ? resolve(blob) : reject(new Error('PNG creation failed')),'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);
+    button.textContent = 'Copied!';
+  } catch {
+    const link = document.createElement('a');
+    link.href = image.toDataURL('image/png');
+    link.download = `cretris-level-${level}.png`;
+    link.click();
+    button.textContent = 'PNG downloaded';
+  }
+  setTimeout(() => { if (mode === 'over') button.textContent = 'Copy board'; },2400);
 }
 
 function log(title, detail = '') {
@@ -67,6 +130,7 @@ function log(title, detail = '') {
 function showOverlay(kicker,title,copy,button,onClick,disabled=false) {
   $('overlay').classList.remove('hidden');
   $('game-summary').hidden = true;
+  $('copy-board').hidden = true;
   $('overlay-kicker').textContent = kicker;
   $('overlay-title').innerHTML = title;
   $('overlay-copy').textContent = copy;
@@ -240,6 +304,8 @@ function gameOver() {
   log('Game over', `${lineCount} lines · ${score} points`);
   showOverlay('GAME OVER','You have exceeded your credit limit.',`${lineCount} lines cleared · ${score} points`,'Play again',startGame);
   showGameSummary();
+  $('copy-board').textContent = 'Copy board';
+  $('copy-board').hidden = false;
   updateStats();
 }
 
@@ -294,6 +360,7 @@ document.addEventListener('keydown', event => {
   action(commands[key]);
 });
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click',()=>action(button.dataset.action)));
+$('copy-board').addEventListener('click',copyBoard);
 
 async function initialLoad() {
   try {
